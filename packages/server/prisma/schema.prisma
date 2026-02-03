@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  password        String
+  role            Role      @default(ACCOUNTANT)
+  avatar          String?
+  phone           String?
+  isVerified      Boolean   @default(false)
+  verificationToken String?
+  resetToken      String?
+  resetTokenExpiry DateTime?
+  lastLogin       DateTime?
+  
+  // Relations
+  clients         Client[]
+  documents       Document[]
+  transactions    Transaction[]
+  invoices        Invoice[]
+  activities      Activity[]
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("users")
+}
+
+model Client {
+  id              String    @id @default(cuid())
+  name            String
+  nipt            String    @unique
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  country         String?   @default("Albania")
+  status          ClientStatus @default(ACTIVE)
+  notes           String?
+  
+  // Relations
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents       Document[]
+  transactions    Transaction[]
+  invoices        Invoice[]
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("clients")
+}
+
+model Document {
+  id              String     @id @default(cuid())
+  name            String
+  type            DocumentType
+  fileUrl         String
+  fileSize        Int
+  mimeType        String
+  description     String?
+  
+  // Relations
+  clientId        String
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Metadata
+  metadata        Json?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("documents")
+}
+
+model Transaction {
+  id              String    @id @default(cuid())
+  date            DateTime
+  description     String
+  amount          Float
+  type            TransactionType
+  category        String
+  vatRate         Float     @default(0.0)
+  vatAmount       Float     @default(0.0)
+  totalAmount     Float
+  reference       String?
+  notes           String?
+  
+  // Relations
+  clientId        String
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("transactions")
+}
+
+model Invoice {
+  id              String     @id @default(cuid())
+  invoiceNumber   String     @unique
+  clientId        String
+  client          Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  issueDate       DateTime
+  dueDate         DateTime
+  status          InvoiceStatus @default(PENDING)
+  
+  items           Json       // Array of invoice items
+  subtotal        Float
+  vatAmount       Float
+  totalAmount     Float
+  
+  notes           String?
+  pdfUrl          String?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("invoices")
+}
+
+model Activity {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  action          String
+  entityType      String
+  entityId        String?
+  details         Json?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  
+  @@map("activities")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  ACCOUNTANT
+  VIEWER
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum DocumentType {
+  INVOICE
+  RECEIPT
+  CONTRACT
+  BALANCE_SHEET
+  VAT_DECLARATION
+  PAYROLL
+  OTHER
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}

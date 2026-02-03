@@ -1,0 +1,11 @@
+{
+  "name": "@accounting/server",
+  "version": "1.0.0",
+  "description": "Backend API",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}
