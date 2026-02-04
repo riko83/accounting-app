@@ -80,7 +80,10 @@ export interface DashboardStats {
   pendingTasks: number;
   upcomingDeadlines: number;
   monthlyRevenue?: number;
+<<<<<<< HEAD
   totalSpreadsheets:number;
+=======
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
 }
 export interface CalendarEvent {
   id: string;
@@ -94,6 +97,7 @@ export interface CalendarEvent {
   status: 'pending' | 'in_progress' | 'completed';
   createdAt: Date | string;
   createdBy: string;
+<<<<<<< HEAD
 }
 export type CellValue = string | number | boolean | null;
 export interface CellPosition {
@@ -145,4 +149,6 @@ export interface CellUpdatePayload {
   sheetId: string;
   cellAddress: string;
   value: CellValue;
+=======
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
 }

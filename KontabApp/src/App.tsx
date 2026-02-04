@@ -14,9 +14,12 @@ import Calendar from './pages/Calendar';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Login from '@/pages/Login';
+<<<<<<< HEAD
 import SpreadsheetsListPage from './pages/SpreadsheetsListPage';
 import SpreadsheetPage from './pages/SpreadsheetPage';
 import NewSpreadsheetPage from './pages/NewSpreadsheetPage';
+=======
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
 
 const ErrorBoundary: React.FC<{children: React.ReactNode}> = ({ children }) => {
   return (
@@ -40,9 +43,12 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
+<<<<<<< HEAD
           <Route path="/spreadsheets" element={<SpreadsheetsListPage />} />
           <Route path="/spreadsheets/:id" element={<SpreadsheetPage />} />
           <Route path="/spreadsheets/new" element={<NewSpreadsheetPage />} />
+=======
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
           <Route path="clients" element={<Clients />} />
           <Route path="clients/:id" element={<ClientDetails />} />
           <Route path="documents" element={<Documents />} />

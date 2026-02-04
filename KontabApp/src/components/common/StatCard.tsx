@@ -10,7 +10,11 @@ interface StatCardProps {
     value: number;
     isPositive: boolean;
   };
+<<<<<<< HEAD
   color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'indigo' | 'orange';
+=======
+  color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'indigo';
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
   description?: string;
   onClick?: () => void;
 }
@@ -60,12 +64,15 @@ const StatCard: React.FC<StatCardProps> = ({
       text: 'text-indigo-600',
       border: 'border-indigo-100',
       iconBg: 'bg-indigo-100'
+<<<<<<< HEAD
     },
     orange:{
       bg: 'bg-orange-50',
       text: 'text-orange-600',
       border: 'border-orange-100',
       iconBg: 'bg-orange-100'
+=======
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
     }
   };
 

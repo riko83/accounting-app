@@ -51,11 +51,18 @@ router.post('/login', async (req, res) => {
     if (rows.length === 0) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+<<<<<<< HEAD
     console.error(rows.email);
     const userRow = rows;
     console.error(userRow.email);
     const match = await bcrypt.compare(password, userRow.password_hash);
     
+=======
+
+    const userRow = rows[0];
+    const match = await bcrypt.compare(password, userRow.password_hash);
+
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -65,7 +72,11 @@ router.post('/login', async (req, res) => {
     return res.json({ user, token });
   } catch (err) {
     console.error(err);
+<<<<<<< HEAD
     return res.status(500).json({ message: err });
+=======
+    return res.status(500).json({ message: 'Server error' });
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
   }
 });
 

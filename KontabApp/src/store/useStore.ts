@@ -1,6 +1,10 @@
 // src/store/useStore.ts - UPDATED
 import { create } from 'zustand';
+<<<<<<< HEAD
 import { Client, Document, Task, User, DashboardStats,CalendarEvent, Spreadsheet  } from '../types';
+=======
+import { Client, Document, Task, User, DashboardStats,CalendarEvent  } from '../types';
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
 import { mockClients, mockDocuments, mockTasks, mockCalendarEvents } from '../data/mockData';
 
 const storedToken = localStorage.getItem('authToken');
@@ -20,6 +24,7 @@ interface AppState {
   addClient: (client: Client) => void;
   updateClient: (id: string, updates: Partial<Client>) => void;
   deleteClient: (id: string) => void;
+<<<<<<< HEAD
 
   // Të dhënat për Spreadsheets
   spreadsheets: Spreadsheet[];
@@ -37,6 +42,9 @@ interface AppState {
   // Utility functions
   getSpreadsheetById: (id: string) => Spreadsheet | undefined;
   getRecentSpreadsheets: (limit?: number) => Spreadsheet[];
+=======
+  
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
   // Documents state
   documents: Document[];
   selectedDocument: Document | null;
@@ -71,7 +79,11 @@ interface AppState {
   deleteCalendarEvent: (id: string) => void;
 }
 
+<<<<<<< HEAD
 export const useStore = create<AppState>((set,get) => ({
+=======
+export const useStore = create<AppState>((set) => ({
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
   user: storedUser,
   authToken: storedToken,
   setUser: (user) => set({ user }),
@@ -85,6 +97,7 @@ export const useStore = create<AppState>((set,get) => ({
     localStorage.removeItem('authUser');
     set({ user: null, authToken: null });
   },
+<<<<<<< HEAD
   // Spreadsheets initial state
   spreadsheets: [],
   currentSpreadsheet: null,
@@ -128,6 +141,9 @@ export const useStore = create<AppState>((set,get) => ({
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       .slice(0, limit);
   },
+=======
+  
+>>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
   clients: mockClients,
   selectedClient: null,
   setClients: (clients) => set({ clients }),
