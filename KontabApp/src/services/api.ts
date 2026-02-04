@@ -142,13 +142,9 @@ export class ApiService {
         t.dueDate && 
         new Date(t.dueDate) > new Date() && 
         new Date(t.dueDate) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      ).length,
-<<<<<<< HEAD
+      ).length, 
       monthlyRevenue: 12500,
-      totalSpreadsheets:3
-=======
-      monthlyRevenue: 12500
->>>>>>> dbd45331346e0c62155f5f224ffe5017c2dd5762
+      totalSpreadsheets:3 
     };
   }
 
