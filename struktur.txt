@@ -1,22 +1,18 @@
-kontabapp/
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── common/           # Komponentë të përgjithshëm
-│   │   ├── layout/           # Komponentë layout
-│   │   ├── clients/          # Komponentë për klientët
-│   │   ├── documents/        # Komponentë për dokumentet
-│   │   ├── accounting/       # Komponentë për kontabilitet
-│   │   └── tasks/            # Komponentë për detyrat
-│   ├── hooks/                # Custom hooks
-│   ├── lib/                  # Utilities & konfigurime
-│   ├── services/             # API calls & services
-│   ├── store/                # State management (Zustand/Redux)
-│   ├── types/                # TypeScript types & interfaces
-│   ├── utils/                # Helper functions
-│   ├── pages/                # Faqet e aplikacionit
-│   ├── App.tsx
-│   └── main.tsx
-├── tailwind.config.js
-├── tsconfig.json
-└── package.json
+accounting-app/ 
+│   ├── src/
+│   │   ├── components/
+|   |   |── data/
+|   |   |── hooks/
+|   |   |──lib/
+|   |   |── services/
+│   │   ├── pages/
+|   |   |── store/
+|   |   |── types/
+|   |   |── utils/ 
+|   |── server/
+│   |   |   ├── src/
+│   │   |   ├── route/
+│   │   |   ├── auth.js
+│   │   |   ├── db.js
+│   │   |   └── index.js
+ 

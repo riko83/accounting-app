@@ -14,6 +14,9 @@ import Calendar from './pages/Calendar';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Login from '@/pages/Login';
+import SpreadsheetsListPage from './pages/SpreadsheetsListPage';
+import SpreadsheetPage from './pages/SpreadsheetPage';
+import NewSpreadsheetPage from './pages/NewSpreadsheetPage';
 
 const ErrorBoundary: React.FC<{children: React.ReactNode}> = ({ children }) => {
   return (
@@ -37,6 +40,9 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
+          <Route path="/spreadsheets" element={<SpreadsheetsListPage />} />
+          <Route path="/spreadsheets/:id" element={<SpreadsheetPage />} />
+          <Route path="/spreadsheets/new" element={<NewSpreadsheetPage />} />
           <Route path="clients" element={<Clients />} />
           <Route path="clients/:id" element={<ClientDetails />} />
           <Route path="documents" element={<Documents />} />

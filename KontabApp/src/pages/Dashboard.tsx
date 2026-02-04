@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx - UPDATED
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Users,
   FileText,
@@ -9,7 +9,8 @@ import {
   AlertCircle,
   DollarSign,
   Clock,
-  Plus,
+  Plus,ChevronDown,
+  Table,
   ArrowUpRight
 } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
@@ -20,24 +21,98 @@ import RecentClientsTable from '../components/clients/RecentClientsTable';
 import UpcomingTasks from '../components/tasks/UpcomingTasks';
 import DocumentStats from '../components/documents/DocumentStats';
 import DocumentUpload from '../components/documents/DocumentUpload';
+import { Spreadsheet } from '@/types/spreadsheet';
 
 const Dashboard: React.FC = () => {
-  const { clients, documents, tasks, dashboardStats, setDashboardStats } = useStore();
+  const { clients, documents, tasks, dashboardStats, setDashboardStats,spreadsheets } = useStore();
+  const recentSpreadsheets = spreadsheets.slice(0, 3); // 3 të fundit
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showAddClient, setShowAddClient] = useState(false);
+  const [showCreateDropdown, setShowCreateDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const api = useApi();
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowCreateDropdown(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   useEffect(() => {
     const loadStats = async () => {
       try {
         const stats = await api.getDashboardStats();
-        setDashboardStats(stats);
+        const enhancedStats = {
+          ...stats,
+          totalSpreadsheets: stats.totalSpreadsheets || spreadsheets.length
+        };
+        setDashboardStats(enhancedStats);
       } catch (error) {
         console.error('Failed to load stats:', error);
       }
     };
     loadStats();
   }, []);
+  useEffect(() => {
+    loadRecentSpreadsheets();
+  }, []);
+  const loadRecentSpreadsheets = async () => {
+    try {
+      // Në fakt, duhet të keni një endpoint për spreadsheets e fundit
+      // Për tani, do të përdorim një mock funksion
+      const spreadsheets = await getRecentSpreadsheets();
+      setRecentSpreadsheets(spreadsheets);
+    } catch (error) {
+      console.error('Failed to load recent spreadsheets:', error);
+    } finally {
+      //setLoading(false);
+    }
+  };
+
+  const getRecentSpreadsheets = async (): Promise<Spreadsheet[]> => {
+    // Mock data - në prodhim do të merrni nga API
+    return [
+      {
+        id: '1',
+        name: 'Balance Sheet 2024',
+        description: 'Annual financial statement',
+        sheets: [],
+        ownerId: '1',
+        sharedWith: [],
+        isTemplate: false,
+        templateType: 'balance',
+        createdAt: new Date('2024-01-15'),
+        updatedAt: new Date('2024-01-20')
+      },
+      {
+        id: '2',
+        name: 'Income Q1',
+        description: 'First quarter income report',
+        sheets: [],
+        ownerId: '1',
+        sharedWith: [],
+        isTemplate: false,
+        templateType: 'income',
+        createdAt: new Date('2024-01-10'),
+        updatedAt: new Date('2024-01-18')
+      },
+      {
+        id: '3',
+        name: 'Payroll January',
+        description: 'Monthly payroll calculation',
+        sheets: [],
+        ownerId: '1',
+        sharedWith: [],
+        isTemplate: false,
+        templateType: 'payroll',
+        createdAt: new Date('2024-01-05'),
+        updatedAt: new Date('2024-01-15')
+      }
+    ];
+  };
 
   const stats = dashboardStats || {
     totalClients: 0,
@@ -45,7 +120,8 @@ const Dashboard: React.FC = () => {
     pendingDocuments: 0,
     pendingTasks: 0,
     upcomingDeadlines: 0,
-    monthlyRevenue: 0
+    monthlyRevenue: 0,
+    totalSpreadsheets:0
   };
 
   const recentClients = clients.slice(0, 5);
@@ -55,18 +131,26 @@ const Dashboard: React.FC = () => {
 
   const handleAddClient = () => {
     setShowAddClient(true);
+    setShowCreateDropdown(false);
     // Në praktikë, do të hapej një modal
     console.log('Add new client');
+  };
+  const handleCreateSpreadsheet = () => {
+    setShowCreateDropdown(false);
+    window.location.href = '/spreadsheets/new';
+  };
+  
+  const handleCreateTask = () => {
+    setShowCreateDropdown(false);
+    window.location.href = '/tasks/new';
+    console.log('Create new task');
   };
 
   const handleUploadDocument = () => {
     setShowUploadModal(true);
   };
 
-  const handleCreateTask = () => {
-    // Do të hapej modal për krijimin e detyrës
-    console.log('Create new task');
-  };
+   
 
   const handleRecordPayment = () => {
     // Do të hapej modal për regjistrimin e pagesës
@@ -75,7 +159,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+        {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -83,15 +167,60 @@ const Dashboard: React.FC = () => {
             Mirë se vini përsëri! Këtu është një përmbledhje e aktivitetit tuaj.
           </p>
         </div>
+        
         <div className="flex items-center space-x-3">
           <Button variant="outline" icon={Clock}>
             Sot: {new Date().toLocaleDateString('sq-AL')}
           </Button>
-          <Button variant="primary" icon={Plus} onClick={handleAddClient}>
-            Krijo të ri
-          </Button>
+          
+          {/* Dropdown Container */}
+          <div className="relative" ref={dropdownRef}>
+            {/* Butoni i Dropdown-it */}
+            <Button 
+              variant="primary" 
+              icon={Plus}
+              onClick={() => setShowCreateDropdown(!showCreateDropdown)}
+            >
+              Krijo të ri <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+            
+            {/* Dropdown Menu - kontrollohet nga state */}
+            {showCreateDropdown && (
+              <div 
+                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+              >
+                <div className="py-1" role="menu" aria-orientation="vertical">
+                  <a 
+                    href="/clients/new" 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                    onClick={handleAddClient}
+                  >
+                    + Klient i ri
+                  </a>
+                  <a 
+                    href="/spreadsheets/new" 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                    onClick={handleCreateSpreadsheet}
+                  >
+                    + Spreadsheet i ri
+                  </a>
+                  <a 
+                    href="/tasks/new" 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                    onClick={handleCreateTask}
+                  >
+                    + Detyrë e re
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -142,6 +271,14 @@ const Dashboard: React.FC = () => {
           description="Muaj aktual"
           onClick={() => console.log('Navigate to accounting')}
         />
+        <StatCard
+          title="Spreadsheets"
+          value={stats.totalSpreadsheets || 0} // Do të duhet të shtoni këtë në statistikat tuaja
+          icon={Table}
+          color="yellow" // Ose çdo ngjyrë tjetër që nuk është përdorur
+          description="Fletëllogaritje"
+          onClick={() => window.location.href = '/spreadsheets'} // Ose përdorni useNavigate
+        />
       </div>
 
       {/* Alerts Section */}
@@ -178,6 +315,14 @@ const Dashboard: React.FC = () => {
                     Klientët e shtuar ose të përditësuar së fundmi
                   </p>
                 </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Spreadsheets e Fundit
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Fletëllogaritjet tuaja të modifikuara së fundmi
+                  </p>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -189,6 +334,12 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
             <RecentClientsTable clients={recentClients} />
+            <div className="p-6">
+              {/* Këtu mund të vendosni një listë të thjeshtë ose një komponent RecentSpreadsheetsTable */}
+              <p className="text-gray-500 text-center py-4">
+                Akoma nuk keni asnjë spreadsheet. <a href="/spreadsheets/new" className="text-teal-600 hover:underline">Krijoni të parën!</a>
+              </p>
+            </div>
           </div>
 
           <DocumentStats />
@@ -236,6 +387,22 @@ const Dashboard: React.FC = () => {
               >
                 Krijo Detyrë të Re
               </Button>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                icon={Table} // Përdorni të njëjtën ikonë
+                onClick={() => window.location.href = '/spreadsheets'}
+              >
+                Hap Spreadsheets
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                icon={Table}
+                onClick={() => window.location.href = '/spreadsheets/new'}
+              >
+                Krijo Spreadsheet
+              </Button>
             </div>
           </div>
 
@@ -264,8 +431,8 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-
+      </div> 
+      
       {/* Modals */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

@@ -1,0 +1,133 @@
+/* src/components/spreadsheet/SpreadsheetGrid.css */
+.spreadsheet-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .formula-bar {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 40px;
+  }
+  
+  .cell-address-display {
+    min-width: 60px;
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    text-align: center;
+    margin-right: 10px;
+  }
+  
+  .formula-input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+  
+  .formula-input:focus {
+    outline: none;
+    border-color: #4dabf7;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.3);
+  }
+  
+  .spreadsheet-container {
+    flex: 1;
+    overflow: auto;
+    background: white;
+  }
+  
+  .spreadsheet-grid {
+    display: inline-block;
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .grid-row {
+    display: flex;
+    min-height: 30px;
+  }
+  
+  .cell {
+    min-width: 100px;
+    min-height: 30px;
+    border: 1px solid #e0e0e0;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+  
+  .header-cell {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    justify-content: center;
+    position: sticky;
+    z-index: 1;
+  }
+  
+  .corner {
+    min-width: 50px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  
+  .row-header {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: #f8f9fa;
+  }
+  
+  .data-cell {
+    background: white;
+    cursor: cell;
+  }
+  
+  .data-cell.selected {
+    border: 2px solid #4dabf7;
+    z-index: 1;
+  }
+  
+  .data-cell:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Scrollbar styling */
+  .spreadsheet-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 6px;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }

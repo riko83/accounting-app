@@ -1,6 +1,6 @@
 // src/store/useStore.ts - UPDATED
 import { create } from 'zustand';
-import { Client, Document, Task, User, DashboardStats,CalendarEvent  } from '../types';
+import { Client, Document, Task, User, DashboardStats,CalendarEvent, Spreadsheet  } from '../types';
 import { mockClients, mockDocuments, mockTasks, mockCalendarEvents } from '../data/mockData';
 
 const storedToken = localStorage.getItem('authToken');
@@ -20,7 +20,23 @@ interface AppState {
   addClient: (client: Client) => void;
   updateClient: (id: string, updates: Partial<Client>) => void;
   deleteClient: (id: string) => void;
-  
+
+  // Të dhënat për Spreadsheets
+  spreadsheets: Spreadsheet[];
+  currentSpreadsheet: Spreadsheet | null;
+  recentSpreadsheets: Spreadsheet[]; 
+
+
+  // Veprimet për Spreadsheets
+  setSpreadsheets: (spreadsheets: Spreadsheet[]) => void;
+  setCurrentSpreadsheet: (spreadsheet: Spreadsheet | null) => void;
+  setRecentSpreadsheets: (spreadsheets: Spreadsheet[]) => void;
+  addSpreadsheet: (spreadsheet: Spreadsheet) => void;
+  updateSpreadsheet: (id: string, updates: Partial<Spreadsheet>) => void;
+  deleteSpreadsheet: (id: string) => void;
+  // Utility functions
+  getSpreadsheetById: (id: string) => Spreadsheet | undefined;
+  getRecentSpreadsheets: (limit?: number) => Spreadsheet[];
   // Documents state
   documents: Document[];
   selectedDocument: Document | null;
@@ -55,7 +71,7 @@ interface AppState {
   deleteCalendarEvent: (id: string) => void;
 }
 
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<AppState>((set,get) => ({
   user: storedUser,
   authToken: storedToken,
   setUser: (user) => set({ user }),
@@ -69,7 +85,49 @@ export const useStore = create<AppState>((set) => ({
     localStorage.removeItem('authUser');
     set({ user: null, authToken: null });
   },
-  
+  // Spreadsheets initial state
+  spreadsheets: [],
+  currentSpreadsheet: null,
+  recentSpreadsheets: [],
+  // Spreadsheet actions
+  setSpreadsheets: (spreadsheets) => set({ spreadsheets }),
+  setCurrentSpreadsheet: (spreadsheet) => set({ currentSpreadsheet: spreadsheet }),
+  setRecentSpreadsheets: (recentSpreadsheets) => set({ recentSpreadsheets }),
+  addSpreadsheet: (spreadsheet) => 
+    set((state) => ({ 
+      spreadsheets: [...state.spreadsheets, spreadsheet],
+      recentSpreadsheets: [spreadsheet, ...state.recentSpreadsheets.slice(0, 4)]
+    })),
+  updateSpreadsheet: (id, updates) =>
+    set((state) => ({
+      spreadsheets: state.spreadsheets.map(sp => 
+        sp.id === id ? { ...sp, ...updates, updatedAt: new Date() } : sp
+      ),
+      recentSpreadsheets: state.recentSpreadsheets.map(sp =>
+        sp.id === id ? { ...sp, ...updates, updatedAt: new Date() } : sp
+      ),
+      currentSpreadsheet: state.currentSpreadsheet?.id === id 
+        ? { ...state.currentSpreadsheet, ...updates, updatedAt: new Date() }
+        : state.currentSpreadsheet
+    })),
+  deleteSpreadsheet: (id) =>
+    set((state) => ({
+      spreadsheets: state.spreadsheets.filter(sp => sp.id !== id),
+      recentSpreadsheets: state.recentSpreadsheets.filter(sp => sp.id !== id),
+      currentSpreadsheet: state.currentSpreadsheet?.id === id 
+        ? null 
+        : state.currentSpreadsheet
+    })),
+    // Utility functions
+  getSpreadsheetById: (id) => {
+    return get().spreadsheets.find(sp => sp.id === id);
+  },
+  getRecentSpreadsheets: (limit = 5) => {
+    const spreadsheets = get().spreadsheets;
+    return [...spreadsheets]
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      .slice(0, limit);
+  },
   clients: mockClients,
   selectedClient: null,
   setClients: (clients) => set({ clients }),

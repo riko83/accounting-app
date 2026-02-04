@@ -51,10 +51,11 @@ router.post('/login', async (req, res) => {
     if (rows.length === 0) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
-
-    const userRow = rows[0];
+    console.error(rows.email);
+    const userRow = rows;
+    console.error(userRow.email);
     const match = await bcrypt.compare(password, userRow.password_hash);
-
+    
     if (!match) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -64,7 +65,7 @@ router.post('/login', async (req, res) => {
     return res.json({ user, token });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: err });
   }
 });
 

@@ -1,0 +1,111 @@
+/* frontend/src/components/spreadsheet/SpreadsheetComponent.css */
+.spreadsheet-container {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    border: 1px solid #ddd;
+  }
+  
+  .formula-bar {
+    display: flex;
+    padding: 8px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    align-items: center;
+  }
+  
+  .cell-address {
+    min-width: 60px;
+    padding: 4px 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-family: monospace;
+    text-align: center;
+  }
+  
+  .formula-input {
+    flex: 1;
+    margin-left: 10px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 14px;
+  }
+  
+  .formula-input:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  }
+  
+  .spreadsheet-grid {
+    flex: 1;
+    overflow: auto;
+  }
+  
+  .row {
+    display: flex;
+    min-height: 30px;
+  }
+  
+  .cell {
+    min-width: 100px;
+    min-height: 30px;
+    border: 1px solid #e0e0e0;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: white;
+  }
+  
+  .cell.header {
+    background: #f8f9fa;
+    font-weight: bold;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .cell.corner {
+    background: #f8f9fa;
+    min-width: 50px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  
+  .cell.selected {
+    border: 2px solid #2196F3;
+    z-index: 1;
+  }
+  
+  .cell.bold {
+    font-weight: bold;
+  }
+  
+  /* Scrollbar styling */
+  .spreadsheet-grid::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .spreadsheet-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .spreadsheet-grid::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+  }
+  
+  .spreadsheet-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

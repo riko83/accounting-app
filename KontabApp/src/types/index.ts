@@ -80,6 +80,7 @@ export interface DashboardStats {
   pendingTasks: number;
   upcomingDeadlines: number;
   monthlyRevenue?: number;
+  totalSpreadsheets:number;
 }
 export interface CalendarEvent {
   id: string;
@@ -93,4 +94,55 @@ export interface CalendarEvent {
   status: 'pending' | 'in_progress' | 'completed';
   createdAt: Date | string;
   createdBy: string;
+}
+export type CellValue = string | number | boolean | null;
+export interface CellPosition {
+  row: number;
+  col: number;
+  sheetId: string;
+}
+export interface FormulaCell {
+  id: string;
+  cellAddress: string;
+  formula: string;
+  dependencies: string[];
+  calculatedValue: CellValue;
+  lastCalculated: Date;
+}
+export interface CellFormatting {
+  bold?: boolean;
+  italic?: boolean;
+  fontSize?: number;
+  backgroundColor?: string;
+  textColor?: string;
+  numberFormat?: 'currency' | 'percentage' | 'number' | 'date';
+  currency?: string;
+  textAlign?: 'left' | 'center' | 'right';
+}
+export interface Sheet {
+  id: string;
+  name: string;
+  data: CellValue[][];
+  formulas: FormulaCell[];
+  formatting: CellFormatting[][];
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface Spreadsheet {
+  id: string;
+  name: string;
+  description?: string;
+  sheets: Sheet[];
+  ownerId: string;
+  sharedWith: string[];
+  isTemplate: boolean;
+  templateType?: 'balance' | 'income' | 'cashflow' | 'payroll' | 'general';
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface CellUpdatePayload {
+  spreadsheetId: string;
+  sheetId: string;
+  cellAddress: string;
+  value: CellValue;
 }
